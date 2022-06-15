@@ -1,66 +1,7 @@
 import "./styles.css";
-import $ from "jquery";
-require('./jquery.min.js');
+//import $ from "jquery";
+//require('./jquery.min.js');
 'use strict';
-
-
-
-
-
-/*const box = document.getElementById('Abusive relationship cycle');
-const classes = box.classList;
-classes.add("d");
-box.textContent = classes;
-console.log(box.textContent)*/
-
-/*function hide(classToHide) {	
-    [].forEach.call(document.getElementsByClassName(classToHide), function (el) {
-        el.hidden = true;
-      });  
-  }
-  
-// Show the element with classToShow
-function show(classToShow) {	
-    [].forEach.call(document.getElementsByClassName(classToShow), function (el) {
-        el.hidden = false;
-      });  
-  }
-  
-// Event for the .com checkbox
-document.getElementById('hotline').onchange = function() {
-	if (this.checked) show('hotline'); else hide('hotline');
-}
-
-// Event for the .com checkbox
-document.getElementById('people-also-ask').onchange = function() {
-	if (this.checked) show('people-also-ask'); else hide('people-also-ask');
-}
-
-
-
-/*const test1 = document.getElementById('Abusive relationship cycle');
-test1.classList.add('hotline', "people also ask");
-console.log(test1)
-//document.querySelectorAll('.player')
-
-// Hide the element with classToHide
-function hide(classToHide) {	
-    [].forEach.call(document.getElementsByClassName(classToHide), function (el) {
-        el.hidden = true;
-      });  
-  }
-  
-// Show the element with classToShow
-function show(classToShow) {	
-    [].forEach.call(document.getElementsByClassName(classToShow), function (el) {
-        el.hidden = false;
-      });  
-  }
-  
-// Event for the .com checkbox
-document.getElementById('hotline').onchange = function() {
-	if (this.checked) show('hotline'); else hide('hotline');
-}*/
 
   
 
