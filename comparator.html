@@ -15,7 +15,7 @@
     <body>
         <div>
         <!-- Query Dropdown --> 
-            <select id='selQuery' style='width: 200px;'>
+            <select id='selQuery' class = 'selector' style='width: 200px;'>
                 <option value='0'>Select Query</option> 
                 <option value='(f)ae (f)aer'>(f)ae (f)aer</option> 
                 <option value='Abusive Relationship Cycle'>Abusive Relationship Cycle</option> 
@@ -30,7 +30,7 @@
 
         <div>
         <!-- Date 1 Dropdown --> 
-        <select id='selDate1' style='width: 200px;'>
+        <select id='selDate1' class = 'selector' style='width: 200px;'>
             <option value='0'>Select Date 1</option> 
             <option value='6-8-22'>6-8-22</option> 
             <option value='6-9-22'>6-9-22</option> 
@@ -40,7 +40,7 @@
 
 
         <!-- Date 2 Dropdown --> 
-        <select id='selDate2' style='width: 200px;'>
+        <select id='selDate2' class = 'selector' style='width: 200px;'>
             <option value='0'>Select Date</option> 
             <option value='6-8-22'>6-8-22</option> 
             <option value='6-9-22'>6-9-22</option> 
@@ -64,60 +64,42 @@
                 var date2 = '';
                 var filename1 = '';
                 var filename2 = '';
+
                 // Initialize select2
                 $("#selQuery").select2();
-
                 // Read selected option
                 $('#selQuery').change(function(){
                     queryname = $('#selQuery option:selected').text();
-                    //var userid = $('#selQuery').val();
-                    console.log(queryname);
-                    filename1 = 'SERP_Collection/'+$('#selDate1 option:selected').text()+"/"+queryname+".html";
-                    filename2 = 'SERP_Collection/'+$('#selDate2 option:selected').text()+"/"+queryname+".html";
-                    $(document).ready(function(){
-                        console.log(filename1);
-                    $('#iframeDate1').attr('src', filename1);
-                    $('#iframeDate2').attr('src', filename2);
-                    });
-                $('#result').html("query : " + queryname);
-
+                    $('#result').html("query : " + queryname);
                 });
 
                 // Initialize select2
                 $("#selDate1").select2();
-
                 // Read selected option
                 $('#selDate1').change(function(){
                     date1 = $('#selDate1 option:selected').text();
                     //var userid = $('#selDate').val();
-                    filename1 = 'SERP_Collection/'+date1+"/"+queryname+".html";
-                    $(document).ready(function(){
-                        console.log(filename1);
-                    $('#iframeDate1').attr('src', filename1);
-                    });
-
-                $('#resultDate1').html("date 1 : " + date1);
-
+                    $('#resultDate1').html("date 1 : " + date1);
                 });
 
                 // Initialize select2
                 $("#selDate2").select2();
-
                 // Read selected option
                 $('#selDate2').change(function(){
                     date2 = $('#selDate2 option:selected').text();
                     //var userid = $('#selDate').val();
-                    filename2 = 'SERP_Collection/'+date2+"/"+queryname+".html";
-                    $(document).ready(function(){
-                        console.log(filename2);
-                    $('#iframeDate2').attr('src', filename2);
-                    });
-
-                $('#resultDate2').html("date 2 : " + date2);
-
+                    $('#resultDate2').html("date 2 : " + date2);
                 });
 
-                
+                $('.selector').change(function(){
+                    filename1 = 'SERP_Collection/'+date1+"/"+queryname+".html";
+                    filename2 = 'SERP_Collection/'+date2+"/"+queryname+".html";
+                    $(document).ready(function(){
+                        console.log(filename1);
+                        $('#iframeDate1').attr('src', filename1);
+                        $('#iframeDate2').attr('src', filename2);
+                    });
+                })
 
                 });
         </script>
