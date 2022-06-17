@@ -409,7 +409,7 @@ def runFile(date, file):
     Takes a path to the directory with all of the saved SERPs and a particular html file, returns
     the result of getComponents() function for this html file.
     """
-    path = "SERP_Collection/" + str(date) +'/' + str(file)
+    path = "../SERP_Collection/" + str(date) +'/' + str(file)
     html = open(path, 'r')
     htmltext = html.read()
     query = file.split('.')[0] ## change when needed

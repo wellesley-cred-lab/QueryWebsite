@@ -87,7 +87,7 @@ def main(file1path, file2path, query, date1, date2):
     result = nonOrganicresult
     result['organic'] = organicResult
 
-    with open(f'{query}_changebetween_{date1}_and_{date2}.json', "w") as outfile:
+    with open(f'changes/{query}_changebetween_{date1}_and_{date2}.json', "w") as outfile:
         json.dump(result, outfile)
 
 if __name__ == "__main__":

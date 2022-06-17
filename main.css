@@ -20,6 +20,12 @@ nav ul{
 
 }
 
+table, th, td {
+    border: 1px solid;
+    overflow:hidden;
+    overflow-y:scroll;
+  }
+
 
 a:link {
 
