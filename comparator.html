@@ -16,107 +16,58 @@
     </head>
     <body onload="brython()">
         <div>
-        <!-- Query Dropdown --> 
-            <select id='selQuery' class = 'selector' style='width: 200px;'>
-                <option value='0'>Select Query</option> 
-                <option value='(f)ae (f)aer'>(f)ae (f)aer</option> 
-                <option value='Abusive Relationship Cycle'>Abusive Relationship Cycle</option> 
-                <option value='Abusive Relationship Help'>Abusive Relationship Help</option> 
-                <option value='4'>Vishal Sahu</option> 
-                <option value='5'>Mayank Patidar</option> 
-                <option value='6'>Vijay Mourya</option> 
-                <option value='7'>Rakesh sahu</option> 
-            </select>
-
+            <p id=query>Query</p>    
         </div>
 
         <div>
-        <!-- Date 1 Dropdown --> 
-        <select id='selDate1' class = 'selector' style='width: 200px;'>
-            <option value='0'>Select Date 1</option> 
-            <option value='6-8-22'>6-8-22</option> 
-            <option value='6-9-22'>6-9-22</option> 
-            <option value='6-13-22'>6-13-22</option> 
-        </select>
-
-
-
-        <!-- Date 2 Dropdown --> 
-        <select id='selDate2' class = 'selector' style='width: 200px;'>
-            <option value='0'>Select Date</option> 
-            <option value='6-8-22'>6-8-22</option> 
-            <option value='6-9-22'>6-9-22</option> 
-            <option value='6-13-22'>6-13-22</option> 
-        </select>
-
+            <span id=date1 style="width: 50%; float:left;">Date 1</span>
+            <span id=date2 style="width: 50%; float:left;">Date 2</span>
         </div>
 
 
-        <br/>
-        <div id='result'></div>
-        <div id='resultDate1'></div>
-        <div id='resultDate2'></div>
+        <iframe id="iframeDate1" name="myIframe" frameborder="5" width="650" height="500"></iframe>
+        <iframe id="iframeDate2" name="myIframe" frameborder="5" width="650" height="500"></iframe>
 
-        <iframe id="iframeDate1" name="myIframe" frameborder="5" width="500" height="300"></iframe>
-        <iframe id="iframeDate2" name="myIframe" frameborder="5" width="500" height="300"></iframe>
+        <div>
+            <p id=difference>Difference</p>    
+        </div>
+        
         <script>
+            var params = {};
+            location.search.slice(1).split("&").forEach(function(pair) {
+            pair = pair.split("=");
+            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            });
+            selectedQuery = params['param1'].replaceAll("+"," ");
+            previousDate = params['param3'];
+            currentDate = params['param2'];
+            console.log(params);
+            console.log(selectedQuery);
+            console.log(previousDate);
+            console.log(currentDate);
+            
+            
+
             $(document).ready(function(){
-                var a = localStorage.getItem('label');
-                console.log(a);
-                var queryname = '';
-                var date1 = '';
-                var date2 = '';
-                var filename1 = '';
-                var filename2 = '';
-
-                // Initialize select2
-                $("#selQuery").select2();
-                // Read selected option
-                $('#selQuery').change(function(){
-                    queryname = $('#selQuery option:selected').text();
-                    $('#result').html(queryname);
-                });
-
-                // Initialize select2
-                $("#selDate1").select2();
-                // Read selected option
-                $('#selDate1').change(function(){
-                    date1 = $('#selDate1 option:selected').text();
-                    //var userid = $('#selDate').val();
-                    $('#resultDate1').html(date1);
-                });
-
-                // Initialize select2
-                $("#selDate2").select2();
-                // Read selected option
-                $('#selDate2').change(function(){
-                    date2 = $('#selDate2 option:selected').text();
-                    //var userid = $('#selDate').val();
-                    $('#resultDate2').html(date2);
-                });
-
-                $('.selector').change(function(){
-                    filename1 = 'SERP_Collection/'+date1+"/"+queryname+".html";
-                    filename2 = 'SERP_Collection/'+date2+"/"+queryname+".html";
-                    $(document).ready(function(){
-                        console.log(filename1);
-                        $('#iframeDate1').attr('src', filename1);
-                        $('#iframeDate2').attr('src', filename2);
-
-                        $.post("https://cs.wellesley.edu/~credlab/serp-scraper-get-difference/create_serps_and_compare.py",
-                            {
-                                date1: "6-9-22",
-                                date2: "6-8-22",
-                                filename: "Ace.html"
-                            },
-                            function(data, status){
-                                alert("Data: " + data + "\nStatus: " + status);
-                            });
-                    });
-                })
+                $('#query').text("Query: "+selectedQuery);
+                $('#date1').text("Previous Date: "+previousDate);
+                $('#date2').text("Current Date: "+currentDate);
+                filename1 = 'SERP_Collection/'+previousDate+"/"+selectedQuery+".html";
+                filename2 = 'SERP_Collection/'+currentDate+"/"+selectedQuery+".html";
+                $(document).ready(function(){
+                    console.log(filename1);
+                    $('#iframeDate1').attr('src', filename1);
+                    $('#iframeDate2').attr('src', filename2);
 
                 });
+
+
+                });
+                
         </script>
+
+        
+        
         <div>
         
         
