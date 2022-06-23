@@ -12,9 +12,8 @@
 		<script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython.min.js"> </script> 
         <script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython_stdlib.js"> </script>
         <script src="app.js"></script>
-		
     </head>
-    <body onload="brython()">
+    <body>
         <div>
             <p id=query>Query</p>    
         </div>
@@ -29,9 +28,9 @@
         <iframe id="iframeDate2" name="myIframe" frameborder="5" width="650" height="500"></iframe>
 
         <div>
-            <p id=difference>Difference</p>    
+            <p id="difference">Difference</p> 
         </div>
-        
+        <div id="new"></div>
         <script>
             var params = {};
             location.search.slice(1).split("&").forEach(function(pair) {
@@ -45,9 +44,81 @@
             console.log(selectedQuery);
             console.log(previousDate);
             console.log(currentDate);
-            
-            
 
+
+            let script = document.createElement('script');
+            jsonName = "serp-scraper-get-difference/changeswithVar/"+selectedQuery+"_changebetween_"+previousDate+"_and_"+currentDate+"_addVar.json";
+            script.src=jsonName;
+            script.onload = function(){
+                var differenceOutput = "";
+                for(var key in data) {
+                    var value = data[key];
+                    if (key == 'organic'){
+                        //console.log(key);
+                        //console.log(value);
+                        for(var domainKey in value) {
+                            //console.log(domainKey);
+                            var organicChange = value[domainKey];
+                            //console.log(organicChange);
+                            if(organicChange['change_type']=='unchanged'){
+                                var s = "The organic domain "+ domainKey +" is unchanged.";
+                                differenceOutput+=s;
+                                differenceOutput+="\n";
+                                //console.log(s);
+                            }
+                            else if(organicChange['change_type']=='move'){
+                                var s = "The organic domain "+ domainKey +" moved ";
+                                console.log(organicChange['change']);
+                                if(organicChange['change']<0){
+                                    s+="down ";
+                                    s+=-1*organicChange['change'];
+                                    s+=" positions.";
+                                }
+                                else{
+                                    s+="up ";
+                                    s+=organicChange['change'];
+                                    s+=" positions.";
+                                }
+                                differenceOutput+=s;
+                                differenceOutput+="\n";
+                                //console.log(s);
+                            }
+                            else{
+                                var s = "The organic domain "+ domainKey +" " + organicChange['change_type']+"ed.";
+                                differenceOutput+=s;
+                                differenceOutput+="\n";
+                                //console.log(s);
+                            }
+                        }
+                    }
+                    else{
+                        if (value['change_type'] == 'unchanged'){
+                            var s = "The component "+ key+" is unchanged.";
+                            differenceOutput+=s;
+                            differenceOutput+="\n";
+                            //console.log(s);
+                        }
+                        else{
+                            var s = "The component "+key+" has "+value['change_type']+"ed.";
+                            differenceOutput+=s;
+                            differenceOutput+="\n";
+                            //console.log(s);
+                        }
+                    }
+                    
+                    //console.log(key);
+                    //console.log(value);
+                    }
+                    console.log(differenceOutput);
+                    $('#difference').text(differenceOutput);
+            }
+            
+            var element=document.getElementById("new");
+            element.appendChild(script);
+        </script>
+        
+        
+        <script>
             $(document).ready(function(){
                 $('#query').text("Query: "+selectedQuery);
                 $('#date1').text("Previous Date: "+previousDate);
@@ -63,16 +134,23 @@
 
 
                 });
+            /*$(document).ready(function(){
+                jsonName = "serp-scraper-get-difference/changes/"+selectedQuery+"_changebetween_"+previousDate+"_and_"+currentDate+".json"
+                $.getJSON(jsonName, function(data){
+                    console.log(data);
+                    for (const [key, value] of Object.entries(data)) {
+                        if (key!="organic"){
+                            console.log(key+"Not organic");
+                            $('#difference').text(key+": "+value);
+                        }
+                    }
+                })
+            });*/
                 
         </script>
 
         
-        
-        <div>
-        
-        
-            
-            
-        </div>
-        
+
+        <!-- <script type="text/javascript" src='data.json'></script> -->
+        <!-- <script>console.log(data.one)</script> -->  
     </body>

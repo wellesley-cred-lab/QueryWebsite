@@ -90,5 +90,9 @@ def main(file1path, file2path, query, date1, date2):
     with open(f'changes/{query}_changebetween_{date1}_and_{date2}.json', "w") as outfile:
         json.dump(result, outfile)
 
+    s = 'var data = {}'.format(json.dumps(result))
+    with open(f'changeswithVar/{query}_changebetween_{date1}_and_{date2}_addVar.json', "w") as outfile:
+        outfile.write(s)
+
 if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
