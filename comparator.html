@@ -12,6 +12,7 @@
 		<!-- <script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython.min.js"> </script> 
         <script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython_stdlib.js"> </script> -->
         <script src="app.js"></script>
+        <link rel="stylesheet" href="../main.css">
     </head>
     <body>
         <div>
@@ -31,7 +32,8 @@
             <p id="differenceOrganic">Difference</p> 
             <p id="differenceNonOrganic">Difference</p> 
         </div> -->
-        <div id="differenceTable"></div>
+        <div id="appeardisappearTable"></div>
+        <div id="moveupdownTable"></div>
         <div id="new"></div>
         <script>
             var params = {};
@@ -52,9 +54,11 @@
             jsonName = "serp-scraper-get-difference/changeswithVar/"+selectedQuery+"_changebetween_"+previousDate+"_and_"+currentDate+"_addVar.json";
             script.src=jsonName;
             script.onload = function(){
-                var differenceOrgOutput = "";
-                var differenceNonOrgOutput = "";
-                var changes = [];
+                var changes = [];  //delete later
+                var moveUp = [];
+                var moveDown = [];
+                var appear = [];
+                var disappear = [];
                 for(var key in data) {
                     var value = data[key];
                     if (key == 'organic'){
@@ -66,8 +70,6 @@
                             //console.log(organicChange);
                             if(organicChange['change_type']=='unchanged'){
                                 var s = "The organic domain "+ domainKey +" is unchanged.";
-                                //differenceOutput+=s;
-                                //differenceOutput+="\n";
                                 //console.log(s);
                             }
                             else if(organicChange['change_type']=='move'){
@@ -77,57 +79,106 @@
                                     s+="down ";
                                     s+=-1*organicChange['change'];
                                     s+=" positions.";
+                                    moveDown.push({"domain":domainKey, "amount":-1*organicChange['change']});
                                 }
                                 else{
                                     s+="up ";
                                     s+=organicChange['change'];
                                     s+=" positions.";
+                                    moveUp.push({"domain":domainKey, "amount":organicChange['change']});
                                 }
-                                differenceOrgOutput+=s;
-                                differenceOrgOutput+="\n";
                                 changes.push(s);
                                 //console.log(s);
                             }
                             else{
                                 var s = "The organic domain "+ domainKey +" " + organicChange['change_type']+"ed.";
-                                differenceOrgOutput+=s;
-                                differenceOrgOutput+="\n";
                                 changes.push(s);
                                 //console.log(s);
+                                if(organicChange['change_type']=='appear'){
+                                    appear.push(domainKey);
+                                }
+                                else{
+                                    disappear.push(domainKey);
+                                }
                             }
                         }
                     }
                     else{
                         if (value['change_type'] == 'unchanged'){
                             var s = "The component "+ key+" is unchanged.";
-                            //differenceOutput+=s;
-                            //differenceOutput+="\n";
                             //console.log(s);
                         }
                         else{
                             var s = "The component "+key+" has "+value['change_type']+"ed.";
-                            differenceNonOrgOutput+=s;
-                            differenceNonOrgOutput+="\n";
                             changes.push(s);
                             //console.log(s);
+                            if(value['change_type']=='appear'){
+                                    appear.push(key);
+                                }
+                                else{
+                                    disappear.push(key);
+                                }
                         }
                     }
+                    }
                     
-                    //console.log(key);
-                    //console.log(value);
-                    }
-                    console.log(differenceOrgOutput);
-                    console.log(differenceNonOrgOutput);
                     console.log(changes);
-                    $('#differenceOrganic').text(differenceOrgOutput);
-                    $('#differenceNonOrganic').text(differenceNonOrgOutput);
+                    console.log("appear");
+                    console.log(appear);
+                    console.log("disappear");
+                    console.log(disappear);
+                    console.log('moveUp');
+                    console.log(moveUp);
+                    console.log('moveDown');
+                    console.log(moveDown);
 
-                    var $table = $('<table/>');
-                    for(var change in changes){
-                        console.log(changes[change]);
-                        $table.append( '<tr><td>' + changes[change] + '</td></tr>' );
+                    //Add table for the components/organic result domain that appeared
+                    var $appearTable = $('<table style=\"border: 1px solid; display: inline-table;\"/>');
+                    console.log(appear.length);
+                    $appearTable.append( '<tr><td style=\"font-weight: bold;\">' + "Appeared" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + appear.length + '</td></tr>' );
+                    for(var item in appear){
+                        console.log(appear[item]);
+                        $appearTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + appear[item] + '</td></tr>' );
                     }
-                    $('#differenceTable').append($table);
+                    $('#appeardisappearTable').append($appearTable);
+
+                    //Add table for the components/organic result domain that disappeared
+                    var $disappearTable = $('<table style=\"border: 1px solid; display: inline-table;\"/>');
+                    console.log(disappear.length);
+                    $disappearTable.append( '<tr><td style=\"font-weight: bold;\">' + "Disappeared" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + disappear.length + '</td></tr>' );
+                    for(var item in disappear){
+                        console.log(disappear[item]);
+                        $disappearTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + disappear[item] + '</td></tr>' );
+                    }
+                    $('#appeardisappearTable').append($disappearTable);
+
+                    var $upTable = $('<table style=\"border: 1px solid; display: inline-table;\"/>');
+                    $upTable.append( '<tr><td style=\"font-weight: bold;\">' + "Moved Up" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + moveUp.length + '</td><td style=\"border: 1px solid; font-weight: bold;\">'+"Number of Positions Moved"+ '</td></tr>');
+                    for(var item in moveUp){
+                        console.log(moveUp[item]);
+                        $upTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + moveUp[item]['domain'] + '</td><td style=\"border: 1px solid;\">'+moveUp[item]['amount']+ '</td></tr>' );
+                    }
+                    $('#moveupdownTable').append($upTable);
+
+                    var $downTable = $('<table style=\"border: 1px solid; display: inline-table;\"/>');
+                    $downTable.append( '<tr><td style=\"font-weight: bold;\">' + "Moved Down" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + moveDown.length + '</td><td style=\"border: 1px solid; font-weight: bold;\">'+"Number of Positions Moved"+ '</td></tr>' );
+                    for(var item in moveDown){
+                        console.log(moveDown[item]);
+                        $downTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + moveDown[item]['domain'] + '</td><td style=\"border: 1px solid;\">'+moveDown[item]['amount']+ '</td</tr>' );
+                    }
+                    $('#moveupdownTable').append($downTable);
+
+
+                    // var $table = $('<table/>');
+                    // for(var change in changes){
+                    //     console.log(changes[change]);
+                    //     $table.append( '<tr><td>' + changes[change] + '</td></tr>' );
+                    // }
+                    // $('#differenceTable').append($table);
+
+                    // $(document).ready(function(){
+                    //     $('#differenceTable').css({"border":"1px solid"});
+                    // })
             }
             
             var element=document.getElementById("new");
@@ -167,6 +218,7 @@
             });*/
                 
         </script>
+        
         <!-- <script type="text/javascript" src='data.json'></script> -->
         <!-- <script>console.log(data.one)</script> -->  
     </body>
