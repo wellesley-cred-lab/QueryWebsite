@@ -32,7 +32,7 @@ def findOrganicChange(contrast):
                     if title1 == title2: ### if the change type is move or unchanged
                         found = True
                         diff = position1-position2
-                        d = {'change': diff, 'title': title1} 
+                        d = {'change': diff, 'title': title1, 'pos1':position1, 'pos2':position2} 
                         if diff == 0:
                             d['change_type'] = 'unchanged'
                         else:
