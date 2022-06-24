@@ -9,8 +9,8 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython.min.js"> </script> 
-        <script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython_stdlib.js"> </script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython.min.js"> </script> 
+        <script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython_stdlib.js"> </script> -->
         <script src="app.js"></script>
     </head>
     <body>
@@ -27,9 +27,11 @@
         <iframe id="iframeDate1" name="myIframe" frameborder="5" width="650" height="500"></iframe>
         <iframe id="iframeDate2" name="myIframe" frameborder="5" width="650" height="500"></iframe>
 
-        <div>
-            <p id="difference">Difference</p> 
-        </div>
+        <!-- <div>
+            <p id="differenceOrganic">Difference</p> 
+            <p id="differenceNonOrganic">Difference</p> 
+        </div> -->
+        <div id="differenceTable"></div>
         <div id="new"></div>
         <script>
             var params = {};
@@ -37,7 +39,7 @@
             pair = pair.split("=");
             params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
             });
-            selectedQuery = params['param1'].replaceAll("+"," ");
+            selectedQuery = params['param1'].replaceAll("%20"," ");
             previousDate = params['param3'];
             currentDate = params['param2'];
             console.log(params);
@@ -50,7 +52,9 @@
             jsonName = "serp-scraper-get-difference/changeswithVar/"+selectedQuery+"_changebetween_"+previousDate+"_and_"+currentDate+"_addVar.json";
             script.src=jsonName;
             script.onload = function(){
-                var differenceOutput = "";
+                var differenceOrgOutput = "";
+                var differenceNonOrgOutput = "";
+                var changes = [];
                 for(var key in data) {
                     var value = data[key];
                     if (key == 'organic'){
@@ -62,8 +66,8 @@
                             //console.log(organicChange);
                             if(organicChange['change_type']=='unchanged'){
                                 var s = "The organic domain "+ domainKey +" is unchanged.";
-                                differenceOutput+=s;
-                                differenceOutput+="\n";
+                                //differenceOutput+=s;
+                                //differenceOutput+="\n";
                                 //console.log(s);
                             }
                             else if(organicChange['change_type']=='move'){
@@ -79,14 +83,16 @@
                                     s+=organicChange['change'];
                                     s+=" positions.";
                                 }
-                                differenceOutput+=s;
-                                differenceOutput+="\n";
+                                differenceOrgOutput+=s;
+                                differenceOrgOutput+="\n";
+                                changes.push(s);
                                 //console.log(s);
                             }
                             else{
                                 var s = "The organic domain "+ domainKey +" " + organicChange['change_type']+"ed.";
-                                differenceOutput+=s;
-                                differenceOutput+="\n";
+                                differenceOrgOutput+=s;
+                                differenceOrgOutput+="\n";
+                                changes.push(s);
                                 //console.log(s);
                             }
                         }
@@ -94,14 +100,15 @@
                     else{
                         if (value['change_type'] == 'unchanged'){
                             var s = "The component "+ key+" is unchanged.";
-                            differenceOutput+=s;
-                            differenceOutput+="\n";
+                            //differenceOutput+=s;
+                            //differenceOutput+="\n";
                             //console.log(s);
                         }
                         else{
                             var s = "The component "+key+" has "+value['change_type']+"ed.";
-                            differenceOutput+=s;
-                            differenceOutput+="\n";
+                            differenceNonOrgOutput+=s;
+                            differenceNonOrgOutput+="\n";
+                            changes.push(s);
                             //console.log(s);
                         }
                     }
@@ -109,8 +116,18 @@
                     //console.log(key);
                     //console.log(value);
                     }
-                    console.log(differenceOutput);
-                    $('#difference').text(differenceOutput);
+                    console.log(differenceOrgOutput);
+                    console.log(differenceNonOrgOutput);
+                    console.log(changes);
+                    $('#differenceOrganic').text(differenceOrgOutput);
+                    $('#differenceNonOrganic').text(differenceNonOrgOutput);
+
+                    var $table = $('<table/>');
+                    for(var change in changes){
+                        console.log(changes[change]);
+                        $table.append( '<tr><td>' + changes[change] + '</td></tr>' );
+                    }
+                    $('#differenceTable').append($table);
             }
             
             var element=document.getElementById("new");
@@ -125,6 +142,8 @@
                 $('#date2').text("Current Date: "+currentDate);
                 filename1 = 'SERP_Collection/'+previousDate+"/"+selectedQuery+".html";
                 filename2 = 'SERP_Collection/'+currentDate+"/"+selectedQuery+".html";
+                //filename1 = 'SERP_Collection_modified/'+previousDate+"/"+selectedQuery+".html";
+                //filename2 = 'SERP_Collection_modified/'+currentDate+"/"+selectedQuery+".html";
                 $(document).ready(function(){
                     console.log(filename1);
                     $('#iframeDate1').attr('src', filename1);
@@ -148,9 +167,6 @@
             });*/
                 
         </script>
-
-        
-
         <!-- <script type="text/javascript" src='data.json'></script> -->
         <!-- <script>console.log(data.one)</script> -->  
     </body>
