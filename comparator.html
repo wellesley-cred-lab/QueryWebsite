@@ -1,16 +1,19 @@
+<!-- This is the Comparator Page that:
+    - reads the link containing the query, current date, and previous date clicked on by the user from the previous changes page
+    - displays the query SERPs on the user clicked date and the previous collection date in two side-by-side iFrames
+    - indicates the changes (appear, disappear, move up, move down) between the two dates with tables -->
+
 <DOCTYPE html>
-    <html>
-    
+    <html>    
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width"> 
         <title>Comparator</title>
+        <!-- Use jQuery and select2 for drop down filter -->
 		<script src="node_modules/jquery/dist/jquery.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-		<!-- <script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython.min.js"> </script> 
-        <script src="https://cdn.jsdelivr.net/npm/brython@3.8.10/brython_stdlib.js"> </script> -->
         <script src="app.js"></script>
         <link rel="stylesheet" href="../main.css">
     </head>
@@ -24,18 +27,13 @@
             <span id=date2 style="width: 50%; float:left;">Date 2</span>
         </div>
 
-
         <iframe id="iframeDate1" name="myIframe" frameborder="5" width="480" height="600"></iframe>
         <iframe id="iframeDate2" name="myIframe" frameborder="5" width="480" height="600"></iframe>
 
-        <!-- <div>
-            <p id="differenceOrganic">Difference</p> 
-            <p id="differenceNonOrganic">Difference</p> 
-        </div> -->
         <div id="table" style="display: inline-table; vertical-align: top;"></div>
-        <!-- <div id="moveupdownTable" style="display: inline-table;"></div> -->
-        <div id="new"></div>
+        <div id="script_here"></div>
         <script>
+            // Get the parameters (query, date1, date2) from the URL
             var params = {};
             location.search.slice(1).split("&").forEach(function(pair) {
             pair = pair.split("=");
@@ -45,11 +43,8 @@
             previousDate = params['param3'];
             currentDate = params['param2'];
             console.log(params);
-            console.log(selectedQuery);
-            console.log(previousDate);
-            console.log(currentDate);
 
-
+            // Add the script that gets the changes (in a json file) for the specified query between the two specified dates
             let script = document.createElement('script');
             jsonName = "serp-scraper-get-difference/changeswithVar/"+selectedQuery+"_changebetween_"+previousDate+"_and_"+currentDate+"_addVar.json";
             script.src=jsonName;
@@ -59,41 +54,43 @@
                 var moveDown = [];
                 var appear = [];
                 var disappear = [];
+                // Sort the changes for organic results and other components according to their change types (appear, disappear, move) into lists
+                // data is the data containing dictionaries read from the changebetween json file; 
+                // Example: {'organic':{'google.com':{'change_type':'move', 'change': 3}, 'abc.org':{'change_type':'appear'}}, 'people also ask':{'change_type':'appear'}}
+                // key is a dictionary with its key being the component type (organic, people also ask, etc.)
+                // value for the key organic contains another dictionary whose keys are the domains in the organic section, the value of the domain keys are another dictionary whose keys are change_type and change (movement amount)
+                // value for the keys that are not organic contains another dictionary whose keys are change_type. 
                 for(var key in data) {
+                    // key is the component type
+                    // value is a dictionary of dictionaries
                     var value = data[key];
-                    if (key == 'organic'){
-                        //console.log(key);
-                        //console.log(value);
+                    if (key == 'organic'){ // if the component is organic 
+                        // domainKey are the domain names in the organic results section
                         for(var domainKey in value) {
-                            //console.log(domainKey);
+                            // each organicChange is a dictionary with the keys 'change_type' and 'change'
                             var organicChange = value[domainKey];
-                            //console.log(organicChange);
                             if(organicChange['change_type']=='unchanged'){
                                 var s = "The organic domain "+ domainKey +" is unchanged.";
-                                //console.log(s);
                             }
                             else if(organicChange['change_type']=='move'){
                                 var s = "The organic domain "+ domainKey +" moved ";
-                                console.log(organicChange['change']);
-                                if(organicChange['change']<0){
+                                if(organicChange['change']<0){  // if the organic domain moved down
                                     s+="down ";
                                     s+=-1*organicChange['change'];
                                     s+=" positions.";
                                     moveDown.push({"domain":domainKey.substring(8), "pos1":organicChange['pos1'], "pos2":organicChange['pos2']});
                                 }
-                                else{
+                                else{  // if the organic domain moved up
                                     s+="up ";
                                     s+=organicChange['change'];
                                     s+=" positions.";
                                     moveUp.push({"domain":domainKey.substring(8), "pos1":organicChange['pos1'], "pos2":organicChange['pos2']});
                                 }
                                 changes.push(s);
-                                //console.log(s);
                             }
-                            else{
+                            else{  // if the organic domain appeared or disappeared
                                 var s = "The organic domain "+ domainKey +" " + organicChange['change_type']+"ed.";
                                 changes.push(s);
-                                //console.log(s);
                                 if(organicChange['change_type']=='appear'){
                                     appear.push(domainKey.substring(8));
                                 }
@@ -103,15 +100,13 @@
                             }
                         }
                     }
-                    else{
+                    else{  // if the component is not organic 
                         if (value['change_type'] == 'unchanged'){
                             var s = "The component "+ key+" is unchanged.";
-                            //console.log(s);
                         }
-                        else{
+                        else{  // if the component appeared or disappeared
                             var s = "The component "+key+" has "+value['change_type']+"ed.";
                             changes.push(s);
-                            //console.log(s);
                             if(value['change_type']=='appear'){
                                     appear.push(key);
                                 }
@@ -121,7 +116,7 @@
                         }
                     }
                     }
-                    
+                    console.log("All changes description");
                     console.log(changes);
                     console.log("appear");
                     console.log(appear);
@@ -132,7 +127,7 @@
                     console.log('moveDown');
                     console.log(moveDown);
 
-                    //Add table for the components/organic result domain that appeared
+                    // Add table for the components/organic result domain that appeared
                     var $appearTable = $('<table style=\"border: 1px solid;\"/>');
                     console.log(appear.length);
                     $appearTable.append( '<tr><td style=\"font-weight: bold;\">' + "Appeared" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + appear.length + '</td></tr>' );
@@ -142,7 +137,7 @@
                     }
                     $('#table').append($appearTable);
 
-                    //Add table for the components/organic result domain that disappeared
+                    // Add table for the components/organic result domain that disappeared
                     var $disappearTable = $('<table style=\"border: 1px solid;\"/>');
                     console.log(disappear.length);
                     $disappearTable.append( '<tr><td style=\"font-weight: bold;\">' + "Disappeared" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + disappear.length + '</td></tr>' );
@@ -152,6 +147,7 @@
                     }
                     $('#table').append($disappearTable);
 
+                    // Add table for the organic result domains that moved up
                     var $upTable = $('<table style=\"border: 1px solid;\"/>');
                     $upTable.append( '<tr><td style=\"font-weight: bold;\">' + "Moved Up" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + moveUp.length + '</td><td style=\"border: 1px solid; font-weight: bold;\">'+"Position Change"+ '</td></tr>');
                     for(var item in moveUp){
@@ -160,6 +156,7 @@
                     }
                     $('#table').append($upTable);
 
+                    // Add table for the organic result domains that moved down
                     var $downTable = $('<table style=\"border: 1px solid;\"/>');
                     $downTable.append( '<tr><td style=\"font-weight: bold;\">' + "Moved Down" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + moveDown.length + '</td><td style=\"border: 1px solid; font-weight: bold;\">'+"Position Change"+ '</td></tr>' );
                     for(var item in moveDown){
@@ -167,21 +164,9 @@
                         $downTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + moveDown[item]['domain'] + '</td><td style=\"border: 1px solid;\">'+moveDown[item]['pos1']+ "->" + moveDown[item]['pos2']+ '</td</tr>' );
                     }
                     $('#table').append($downTable);
-
-
-                    // var $table = $('<table/>');
-                    // for(var change in changes){
-                    //     console.log(changes[change]);
-                    //     $table.append( '<tr><td>' + changes[change] + '</td></tr>' );
-                    // }
-                    // $('#differenceTable').append($table);
-
-                    // $(document).ready(function(){
-                    //     $('#differenceTable').css({"border":"1px solid"});
-                    // })
             }
             
-            var element=document.getElementById("new");
+            var element=document.getElementById("script_here");
             element.appendChild(script);
         </script>
         
@@ -202,20 +187,7 @@
 
                 });
 
-
                 });
-            /*$(document).ready(function(){
-                jsonName = "serp-scraper-get-difference/changes/"+selectedQuery+"_changebetween_"+previousDate+"_and_"+currentDate+".json"
-                $.getJSON(jsonName, function(data){
-                    console.log(data);
-                    for (const [key, value] of Object.entries(data)) {
-                        if (key!="organic"){
-                            console.log(key+"Not organic");
-                            $('#difference').text(key+": "+value);
-                        }
-                    }
-                })
-            });*/
                 
         </script>
         
