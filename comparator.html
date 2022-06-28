@@ -42,6 +42,7 @@
             selectedQuery = params['param1'].replaceAll("%20"," ");
             previousDate = params['param3'];
             currentDate = params['param2'];
+            category = params['param4'];
             console.log(params);
 
             // Add the script that gets the changes (in a json file) for the specified query between the two specified dates
@@ -176,8 +177,9 @@
                 $('#query').text("Query: "+selectedQuery);
                 $('#date1').text("Previous Date: "+previousDate);
                 $('#date2').text("Current Date: "+currentDate);
-                filename1 = 'SERP_Collection/'+previousDate+"/"+selectedQuery+".html";
-                filename2 = 'SERP_Collection/'+currentDate+"/"+selectedQuery+".html";
+                filename1 = 'SERP_Collection/'+previousDate+"/"+category+ "/"+selectedQuery+".html";
+                console.log(filename1);
+                filename2 = 'SERP_Collection/'+currentDate+"/"+category+ "/"+selectedQuery+".html";
                 //filename1 = 'SERP_Collection_modified/'+previousDate+"/"+selectedQuery+".html";
                 //filename2 = 'SERP_Collection_modified/'+currentDate+"/"+selectedQuery+".html";
                 $(document).ready(function(){
