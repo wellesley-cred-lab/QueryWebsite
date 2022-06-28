@@ -404,19 +404,19 @@ def getComponents(htmlText, query):
             cmpts.append(cmp)
     return cmpts
 
-def runFile(date, file):
+def runFile(date, category, file):
     """
     Takes a path to the directory with all of the saved SERPs and a particular html file, returns
     the result of getComponents() function for this html file.
     """
-    path = "../SERP_Collection/" + str(date) +'/' + str(file)
+    path = f"../SERP_Collection/{date}/{category}/{file}"
     html = open(path, 'r')
     htmltext = html.read()
     query = file.split('.')[0] ## change when needed
     return getComponents(htmltext, query)
 
-def main(date, file):
-    date_data = runFile(date, file)
+def main(date, category, file):
+    date_data = runFile(date, category, file)
     path = str(date)+'_'+str(file.split(".")[0])
     output_file = path
     if not os.path.isdir("for_comparing_serps"):
@@ -426,4 +426,4 @@ def main(date, file):
         json.dump(date_data, outfile)
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    main(sys.argv[1], sys.argv[2], sys.argv[3])
