@@ -1,3 +1,7 @@
+'''
+This file runs the serp_scraper.py for the query and the two specified dates, then runs compare_serps.py. 
+The file is run automatically for all the queries and all possible date pairs.
+'''
 import serp_scraper
 import comparing_serps
 import os
@@ -9,7 +13,7 @@ def main(date1, date2, category, filename):
     #category = 'Queer'
     #f = 'Ace.html'
 
-    query = filename.split('.')[0]
+    query = filename.split('.')[0] # query is the query term without the .html extension
 
     os.system(f'python serp_scraper.py {date1} {category} {filename}')
     os.system(f'python serp_scraper.py {date2} {category} {filename}')

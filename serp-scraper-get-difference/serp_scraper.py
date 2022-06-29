@@ -38,7 +38,7 @@ def getPeopleAlsoAsk(block):
         a_link = div.find('a')
         link = a_link.get('href')
         title = div.find('h3').text
-        cite_domain = block.find('cite')
+        cite_domain = div.find('cite')
         domain = cite_domain.text.split()[0]
         data.append((domain, link, title))
     paa['data'] = data
