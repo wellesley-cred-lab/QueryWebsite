@@ -47,8 +47,9 @@
 
             // Add the script that gets the changes (in a json file) for the specified query between the two specified dates
             let script = document.createElement('script');
-            jsonName = "serp-scraper-get-difference/changeswithVar/"+selectedQuery+"_changebetween_"+previousDate+"_and_"+currentDate+"_addVar.json";
+            jsonName = "serp-scraper-get-difference/changeswithVar/"+selectedQuery+"_changebetween_"+previousDate+"_and_"+currentDate+"_addVar.js";
             script.src=jsonName;
+            //script.type='javascript';
             script.onload = function(){
                 var changes = [];  //delete later
                 var moveUp = [];
