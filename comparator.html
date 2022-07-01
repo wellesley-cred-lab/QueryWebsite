@@ -15,7 +15,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="app.js"></script>
-        <link rel="stylesheet" href="../main.css">
+        <!-- <link rel="stylesheet" href="main.css"> -->
     </head>
     <body>
         <div>
@@ -130,9 +130,9 @@
                     console.log(moveDown);
 
                     // Add table for the components/organic result domain that appeared
-                    var $appearTable = $('<table style=\"border: 1px solid;\"/>');
+                    var $appearTable = $('<table style=\"table-layout: auto; width: 400px; border: 1px solid;\"/>');
                     console.log(appear.length);
-                    $appearTable.append( '<tr><td style=\"font-weight: bold;\">' + "Appeared" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + appear.length + '</td></tr>' );
+                    $appearTable.append( '<tr><td style=\"font-weight: bold; background-color: #04AA6D; color: white;\">' + "Appeared" + '</td><td style=\"border: 1px solid; font-weight: bold; background-color: #04AA6D; color: white;\">' + "Count: " + appear.length + '</td></tr>' );
                     for(var item in appear){
                         console.log(appear[item]);
                         $appearTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + appear[item] + '</td></tr>' );
@@ -140,9 +140,9 @@
                     $('#table').append($appearTable);
 
                     // Add table for the components/organic result domain that disappeared
-                    var $disappearTable = $('<table style=\"border: 1px solid;\"/>');
+                    var $disappearTable = $('<table style=\"table-layout: auto; width: 400px; border: 1px solid;\"/>');
                     console.log(disappear.length);
-                    $disappearTable.append( '<tr><td style=\"font-weight: bold;\">' + "Disappeared" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + disappear.length + '</td></tr>' );
+                    $disappearTable.append( '<tr><td style=\"font-weight: bold; background-color: #04AA6D; color: white;\">' + "Disappeared" + '</td><td style=\"border: 1px solid; font-weight: bold; background-color: #04AA6D; color: white;\">' + "Count: " + disappear.length + '</td></tr>' );
                     for(var item in disappear){
                         console.log(disappear[item]);
                         $disappearTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + disappear[item] + '</td></tr>' );
@@ -150,8 +150,8 @@
                     $('#table').append($disappearTable);
 
                     // Add table for the organic result domains that moved up
-                    var $upTable = $('<table style=\"border: 1px solid;\"/>');
-                    $upTable.append( '<tr><td style=\"font-weight: bold;\">' + "Moved Up" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + moveUp.length + '</td><td style=\"border: 1px solid; font-weight: bold;\">'+"Position Change"+ '</td></tr>');
+                    var $upTable = $('<table style=\"table-layout: auto; width: 400px; border: 1px solid;\"/>');
+                    $upTable.append( '<tr><td style=\"font-weight: bold; background-color: #04AA6D; color: white;\">' + "Moved Up" + '</td><td style=\"border: 1px solid; font-weight: bold;background-color: #04AA6D; color: white;\">' + "Count: " + moveUp.length + '</td><td style=\"border: 1px solid; font-weight: bold; background-color: #04AA6D; color: white;\">'+"Position Change"+ '</td></tr>');
                     for(var item in moveUp){
                         console.log(moveUp[item]);
                         $upTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + moveUp[item]['domain'] + '</td><td style=\"border: 1px solid;\">'+moveUp[item]['pos1']+ "->" + moveUp[item]['pos2']+ '</td></tr>' );
@@ -159,8 +159,8 @@
                     $('#table').append($upTable);
 
                     // Add table for the organic result domains that moved down
-                    var $downTable = $('<table style=\"border: 1px solid;\"/>');
-                    $downTable.append( '<tr><td style=\"font-weight: bold;\">' + "Moved Down" + '</td><td style=\"border: 1px solid; font-weight: bold;\">' + "Count: " + moveDown.length + '</td><td style=\"border: 1px solid; font-weight: bold;\">'+"Position Change"+ '</td></tr>' );
+                    var $downTable = $('<table style=\"table-layout: auto; width: 400px; border: 1px solid;\"/>');
+                    $downTable.append( '<tr><td style=\"font-weight: bold; background-color: #04AA6D; color: white;\">' + "Moved Down" + '</td><td style=\"border: 1px solid; font-weight: bold; background-color: #04AA6D; color: white;\">' + "Count: " + moveDown.length + '</td><td style=\"border: 1px solid; font-weight: bold; background-color: #04AA6D; color: white;\">'+"Position Change"+ '</td></tr>' );
                     for(var item in moveDown){
                         console.log(moveDown[item]);
                         $downTable.append( '<tr><td>' + " " + '</td><td style=\"border: 1px solid;\">' + moveDown[item]['domain'] + '</td><td style=\"border: 1px solid;\">'+moveDown[item]['pos1']+ "->" + moveDown[item]['pos2']+ '</td</tr>' );
